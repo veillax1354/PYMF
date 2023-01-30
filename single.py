@@ -1,16 +1,12 @@
 import re
 import os
-import urllib.request
-import time
-from mutagen.mp4 import MP4
+from datetime import datetime
 from pytube import YouTube
 
 #          Copyright Veillax 2023 - 2023 .
 # Distributed under the Boost Software License, Version 1.0.
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
-
-from datetime import datetime
 
 # Function to format views into a human-readable format (K for thousands, M for millions)
 def human_readable_number(number):

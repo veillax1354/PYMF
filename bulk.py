@@ -6,9 +6,6 @@
 
 import re
 import os
-import urllib.request
-import time
-from mutagen.mp4 import MP4
 from pytube import YouTube
 from datetime import datetime
 
@@ -23,7 +20,9 @@ def human_readable_number(number):
     else:
         return "{:.1f}B".format(number / 1000000000)
 # Function to format datetime into "Month Day, Year, Hour:Minute AM/PM" format
-
+def format_datetime(dt):
+    return dt.strftime("%b %d, %Y, %I:%M %p")
+    
     # Open file and read its first line, split it into a list of strings
     with open('links.txt', 'r') as f:
         file = f.readline().split(',')
@@ -49,6 +48,7 @@ def run():
             print(ytDefaultMetadata)
             print("Length:", yt.length // 60, "min", yt.length % 60, "sec")
             print("Views:", human_readable_number(yt.views))
+            print("Posted on", format_datetime(yt.publish_date))
             print("-" * 80)
     
             # Prompt user to choose between direct download or using a video downloader website
