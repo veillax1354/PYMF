@@ -63,7 +63,7 @@ def run():
                 
                 # Try to create a download folder, if it already exists set download path to current working directory
                 dlpath = str(os.getcwd()) + '/videos'
-                print('Path set to current working directory: ' + dlpath)
+                print('Path set to optimal working directory: ' + dlpath)
     
                 video.download(dlpath)
                 print('Video was downloaded to ' + dlpath)

@@ -69,12 +69,8 @@ def srun():
                 dlpath = '/home/runner/PYdl/video'
     
                 # Try to create a download folder, if it already exists set download path to current working directory
-                try:
-                    os.makedirs(dlpath)
-                    print('Path set to ' + dlpath)
-                except:
-                    dlpath = os.getcwd()
-                    print('Path set to current working directory')
+                dlpath = str(os.getcwd()) + '/videos'
+                print('Path set to optimal working directory: ' + dlpath)
     
                 video.download(dlpath)
                 print('Video was downloaded to ' + dlpath)
@@ -87,4 +83,52 @@ def srun():
                     file.write(ytDefaultMetadata)
                     file.write(f"Download Link: {dlink} \n")
                     print("-" * 80 + '\n')
+                os.system('clear')
+
+def testrun():
+    if os.path.exists('test.txt'):
+        os.remove('test.txt')
+
+    # Open file and read its first line, split it into a list of strings
+    with open('test.txt', 'x') as a:
+        a.write('https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+        a.close()
+
+    with open('test.txt', 'r') as f:
+        file = f.readline().split(',')
+
+    # Loop through the list of strings
+    for x in file:
+        # Use regex to search for the video ID in each string
+        match = re.search(r'(?:v=|\/)([0-9A-Za-z_-]{11})', x)
+        # If a video ID is found, retrieve video information and download the video
+        if match:
+            vidID = match.group(1)
+            vidLINK = 'https://www.youtube.com/watch?v=' + vidID
+            yt = YouTube(vidLINK)
+    
+            # Print video information
+            ytDefaultMetadata = 'Downloading Test Video File'
+            print("\n" + ("-" * 80))
+            print(ytDefaultMetadata)
+            print("-" * 80)
+            print("Length:", yt.length // 60, "min", yt.length % 60, "sec")
+            print("-" * 80)
+            f.close()
+            # Directy downloads the video
+            check = 'd'
+            # Direct download
+            if check.lower() == 'direct' or check.lower() == 'd':
+                yt = YouTube(vidLINK)
+                video = yt.streams.filter(
+                    progressive=True,
+                    file_extension='mp4').order_by('resolution').desc().first()
+                dlpath = '/home/runner/PYdl/video'
+    
+                # Try to create a download folder, if it already exists set download path to current working directory
+                dlpath = str(os.getcwd()) + '/videos'
+                print('Path set to optimal working directory: ' + dlpath)
+    
+                video.download(dlpath)
+                print('Video was downloaded to ' + dlpath)
                 os.system('clear')
