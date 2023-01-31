@@ -7,15 +7,23 @@
 import os
 from bulk import run
 from single import srun, testrun
-os.system('clear')
-check = input('Do you want to download individually, chosing whether to get a video download link, or the video mp4, or do you want to download in bulk, getting both the download url and video mp4. \nIf you want to run in single download, input "s" or "single". \nIf you want to run in bulk download, input "b" or "bulk".\nPlease choose an option: ')
-
-if check.lower() == 'b' or check.lower() == 'bulk':
-    os.system('clear')
-    run()
-elif check.lower() == 's' or check.lower() == 'single':
-    os.system('clear')
-    srun()
-elif check.lower() == 't' or check.lower() == 'test':
-    os.system('clear')
-    testrun()
+while True:
+    try:
+        os.system('clear')
+        check = input('Do you want to download individually, chosing whether to get a video download link, or the video mp4, or do you want to download in bulk, getting both the download url and video mp4. \nIf you want to run in single download, input "s" or "single". \nIf you want to run in bulk download, input "b" or "bulk".\nIf you want to run a test download, input "t" or "test".\nPlease choose an option: ')
+        try:
+            if check.lower() == 'b' or check.lower() == 'bulk':
+                os.system('clear')
+                run()
+            elif check.lower() == 's' or check.lower() == 'single':
+                os.system('clear')
+                srun()
+            elif check.lower() == 't' or check.lower() == 'test':
+                os.system('clear')
+                testrun()
+        except KeyboardInterrupt:
+            print()
+    except KeyboardInterrupt:
+        print()
+        os.system('clear')
+        break
