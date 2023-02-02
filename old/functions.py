@@ -3,21 +3,9 @@ from datetime import datetime
 import requests, json, re, os
 
 # Function to format views into a human-readable format (K for thousands, M for millions)
-def human_readable_number(number):
-    if number < 1000:
-        return str(number)
-    elif number < 1000000:
-        return "{:.1f}K".format(number / 1000)
-    elif number < 1000000000:
-        return "{:.1f}M".format(number / 1000000)
-    else:
-        return "{:.1f}B".format(number / 1000000000)
-# Function to format datetime into "Month Day, Year, Hour:Minute AM/PM" format
-def format_datetime(dt):
-    return dt.strftime("%b %d, %Y, %I:%M %p")
+
 # Function to allow for video searching on youtube
 def search_youtube(query):
-    API_KEY = 'AIzaSyBO_Gys3YlizjkkmbpXIvbnFW0vIYbxLj8'
     url = f'https://www.googleapis.com/youtube/v3/search?part=snippet&q={query}&type=video&key={API_KEY}'
     response = requests.get(url)
     return json.loads(response.text)
@@ -29,11 +17,12 @@ def playlist_video_extract(playlist_link):
         l = p.video_urls[:0]
         i = 0
         for url in p.video_urls:
-            print('Currently unavailable.')
-            break
+            print(url)
+        return p.video_urls
+            
 # Test Playlist: https://www.youtube.com/playlist?list=PLxF4AwZ2PvucJi6DJpJx1kbT6eYA86z-P
 
-def video_download_fileEmpty(video_link):
+def video_download(video_link):
     # Use regex to search for the video ID in each string
     match = re.search(r'(?:v=|\/)([0-9A-Za-z_-]{11})', video_link)
     # If a video ID is found, retrieve video information and download the video
@@ -88,3 +77,8 @@ def is_file_empty(file_path):
     except FileNotFoundError:
         open(file_path, "w").close()
         return True
+
+if __name__ == "__main__":
+    video_urls = playlist_video_extract('https://www.youtube.com/playlist?list=PLAjULYyNSE9aa7aQW31IupW685MO-ZBHc')
+    for url in video_urls:
+        video_download(url)

@@ -4,4 +4,14 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
 
-from functions import clear, main_menu
+import functions
+import yt
+
+choice = functions.main_menu()
+
+if choice == 1:
+    yt.main()
+elif choice == 2:
+    # Dice Roller Code, remove pass if implimented
+    pass
+
