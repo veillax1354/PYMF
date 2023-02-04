@@ -4,11 +4,21 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
 
-# pylint: disable=missing-module-docstring
+# pylint: disable=missing-module-
 import datetime
 import random
 import json
 import os
+import pytz
+
+def get_part_of_day(h):
+    """Gets the current part of the day based on the hour. Used for `compliment()`"""
+    return (
+        "morning" if 5 <= h <= 11
+        else "afternoon" if 12 <= h <= 17
+        else "evening" if 18 <= h <= 22
+        else "night"
+    )
 
 def compliment():
     """This gets a random phrase to say each time the main menu is reached from `phrases.json`"""
@@ -34,23 +44,11 @@ def compliment_test(time_part):
             print(compliment_1)
             return compliment_1
 
-def get_part_of_day(h):
-    """Gets the current part of the day based on the hour. Used for `compliment()`"""
-    return (
-        "morning" if 5 <= h <= 11
-        else "afternoon" if 12 <= h <= 17
-        else "evening" if 18 <= h <= 22
-        else "night"
-    )
+
 
 def main_menu():
     """Used to store the main menu for MFPython v2, to make the code cleaner anc easier to read"""
-    compliment_p = compliment()
-    if compliment_p is None:
-        printcompliment = False
-    else:
-        True
-    compliment_l = str(compliment_p) + "\n"
+    
     header = "Welcome to MFPy - The MFPython Main Menu"
     options = [
         "Youtube Video Downloader",
@@ -61,10 +59,11 @@ def main_menu():
     print("=" * len(header))
     print(header)
     print("=" * len(header))
-    if printcompliment == True:
-        print(compliment_p) 
-    else:
+    compliment_p = compliment()
+    if compliment_p is None:
         pass
+    else:
+        print(compliment_p)
     print("Please choose an option:")
     for i, option in enumerate(options):
         print(f"{i + 1}. {option}")
@@ -81,6 +80,11 @@ def main_menu():
             print("Invalid option. Please try again.")
             main_menu()
         return choice
+
+def string_encode(string):
+    """Encodes a string for searching/use in urls"""
+    s = string.encode('utf-8')
+    return s
 
 def clear():
     """Just a simple function to let me import and be
@@ -106,6 +110,7 @@ if __name__ == "__main__":
     clear()
     print(compliment())
     for hour in range(0, 24):
+        print(datetime.datetime.now(pytz.timezone(tz)).hour)
         part = get_part_of_day(hour)
         print(f"hour {hour} is {part}")
         testing_compliments = compliment_test(part) if compliment_test(part) is not None else print("compliment.getcompliment.faliure.default")

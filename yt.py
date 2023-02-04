@@ -13,8 +13,6 @@ import re
 import requests
 import pytube
 from pytube import Playlist, YouTube
-from bs4 import BeautifulSoup
-from moviepy.editor import *
 import functions
 
 API_KEY = os.environ.get("API_KEY")
@@ -26,12 +24,6 @@ try:
     raise ApiNotFoundException("API_KEY required but not found. Please set up a custom secret with the name 'API_KEY' in Github or manually enter.")
 except ApiNotFoundException as e:
     print(e)
-
-
-def MP4ToMP3(mp4, mp3):
-    FILETOCONVERT = AudioFileClip(mp4)
-    FILETOCONVERT.write_audiofile(mp3)
-    FILETOCONVERT.close()
 
 # Extracts video links from a playlist and outputs them to "video_links.txt"
 def playlist_video_extract(playlist_link):
@@ -82,42 +74,25 @@ def video_download(video_link, audio):
         # Direct download
         yt = YouTube(vidLINK)
         video = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
-                    
+        audio = False
         try:
             if audio:
                 # download audio if audio flag is set to True
                 audio_stream = video.streams.filter(only_audio=True, file_extension='mp3').first()
-                dlpath = os.getcwd() + "/videos"
+                dlpath = os.getcwd() + "/songs"
                 audio_stream.download(dlpath)
-                VIDEO_FILE_PATH = os.getcwd() + f"/songs/{audio_stream.default_filename}"
-                AUDIO_FILE_PATH = os.getcwd() + f"/songs/{audio_stream.default_filename}"
-                MP4ToMP3(VIDEO_FILE_PATH, AUDIO_FILE_PATH)
                 print(f"{audio_stream.default_filename} has been downloaded.")
             else:
                 # download video
-                video_stream = video.streams.filter(file_extension='mp4').first()
-                dlpath = os.getcwd() + "/songs"
+                video_stream = video.stream.filter(file_extension='mp4').first()
+                dlpath = os.getcwd() + "/videos"
                 video_stream.download(dlpath)
                 print(f"{video_stream.default_filename} has been downloaded.")
         except Exception as exception_e:
             print(f"An error occured while downloading {vidLINK}: {exception_e}")
         print('Path set to optimal working directory: ' + dlpath)
-        
-        print('Video was downloaded to ' + dlpath)
-
-    """Downloads a video off of YouTube from the given link"""
-    # download video from given url
-    video = pytube.YouTube(url)
-    if audio:
-        # download audio if audio flag is set to True
-        audio_stream = video.streams.filter(only_audio=True, file_extension='mp4').first()
-        audio_stream.download(os.getcwd() + "/videos")
-        print(f"{audio_stream.default_filename} has been downloaded.")
-    else:
-        # download video
-        video_stream = video.streams.filter(file_extension='mp4').first()
-        video_stream.download(os.getcwd() + "/videos")
-        print(f"{video_stream.default_filename} has been downloaded.")
+        dlpath = os.getcwd() + "/videos"
+        print('Video was downloaded to ' + os.getcwd + "/videos")
 # Downloads videos from links in "video_links.txt", or other files containing links, links must be seperated by a new line
 def file_download(file_path, audio=False):
     """Downloads all video links from a file as long as """
@@ -136,7 +111,6 @@ def file_download(file_path, audio=False):
                 video_stream = video.streams.filter(file_extension='mp4').first()
                 video_stream.download(dlpath)
                 print(f"{video_stream.default_filename} has been downloaded.")
-                
 # Finds video titles that match the query
 def search_youtube(query):
     """Finds video titles that match the query"""
@@ -144,7 +118,7 @@ def search_youtube(query):
     response = requests.get(url, timeout=10)
 
     return json.loads(response.text)
-
+# Returns search results
 def search():
     """Searches for the query using search_youtube() then downloads the video as either audio or video"""
     query = input("Enter your search query: ")
