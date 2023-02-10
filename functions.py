@@ -110,7 +110,7 @@ if __name__ == "__main__":
     clear()
     print(compliment())
     for hour in range(0, 24):
-        print(datetime.datetime.now(pytz.timezone(tz)).hour)
+        print(datetime.datetime.now(pytz.timezone("US/Central")).hour)
         part = get_part_of_day(hour)
         print(f"hour {hour} is {part}")
         testing_compliments = compliment_test(part) if compliment_test(part) is not None else print("compliment.getcompliment.faliure.default")

@@ -90,9 +90,9 @@ def video_download(video_link, audio):
                 print(f"{video_stream.default_filename} has been downloaded.")
         except Exception as exception_e:
             print(f"An error occured while downloading {vidLINK}: {exception_e}")
-        print('Path set to optimal working directory: ' + dlpath)
         dlpath = os.getcwd() + "/videos"
-        print('Video was downloaded to ' + os.getcwd + "/videos")
+        print('Path set to optimal working directory: ' + dlpath)
+        print('Video was downloaded to ' + str(os.getcwd()) + "/videos")
 # Downloads videos from links in "video_links.txt", or other files containing links, links must be seperated by a new line
 def file_download(file_path, audio=False):
     """Downloads all video links from a file as long as """
@@ -189,8 +189,7 @@ def main():
             file_download(file_name, audio)
         elif choice == 4:
             # search for youtube video
-            query = input("Enter search query: ")
-            print(yt_search(query))
+            search()
         elif choice == 2:
             global PLAYLIST_URL
             PLAYLIST_URL = input("Enter playlist link: ")
