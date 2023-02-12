@@ -6,33 +6,12 @@
       "Good to see you! How can I assist you?",
       "Hello! How are you feeling today?"
     ],
-    "morning": [
-      "Good morning! How did you sleep?",
-      "Rise and shine! How's your day starting off?",
-      "Morning sunshine! How are you feeling today?",
-      "Good morning, friend! What's on the agenda for today?",
-      "Top of the morning to you! How can I help you today?"
-    ],
-    "afternoon": [
-      "Good afternoon! How's your day been so far?",
-      "Hello there, friend! What's new today?",
-      "Hi there! How can I assist you this afternoon?",
-      "Good afternoon! What have you been up to today?",
-      "Afternoon delight! How can I help you?"
-    ],
-    "evening": [
-      "Good evening! How has your day been?",
-      "Hello there, friend! What's new this evening?",
-      "Evening greetings! How can I assist you?",
-      "Good evening! How has your day been so far?",
-      "Hi there! What have you been up to this evening?"
-    ],
-    "night": [
-      "Goodnight! Sweet dreams.",
-      "Hello there, friend! How was your day today?",
-      "Night time already! How was your day?",
-      "Goodnight! Rest well.",
-      "Hi there! Have a great night's sleep."
+    "phrases": [
+      "How are you doing today?",
+      "What's new with you?",
+      "What have you been up to lately?",
+      "How's your day going so far?",
+      "What's been on your mind lately?",
+      "How's work/school been treating you?"
     ]
   }
-  

@@ -79,19 +79,15 @@ def video_download(video_link, audio):
             if audio:
                 # download audio if audio flag is set to True
                 audio_stream = video.streams.filter(only_audio=True, file_extension='mp3').first()
-                dlpath = os.getcwd() + "/songs"
-                audio_stream.download(dlpath)
-                print(f"{audio_stream.default_filename} has been downloaded.")
+                audio_stream.download(os.getcwd() + "/songs")
             else:
                 # download video
                 video_stream = video.stream.filter(file_extension='mp4').first()
-                dlpath = os.getcwd() + "/videos"
-                video_stream.download(dlpath)
-                print(f"{video_stream.default_filename} has been downloaded.")
+                video_stream.download(os.getcwd() + "/videos")
         except Exception as exception_e:
             print(f"An error occured while downloading {vidLINK}: {exception_e}")
         dlpath = os.getcwd() + "/videos"
-        print('Path set to optimal working directory: ' + dlpath)
+        print('Path set to optimal working directory: ' + os.getcwd() + "/videos")
         print('Video was downloaded to ' + str(os.getcwd()) + "/videos")
 # Downloads videos from links in "video_links.txt", or other files containing links, links must be seperated by a new line
 def file_download(file_path, audio=False):
