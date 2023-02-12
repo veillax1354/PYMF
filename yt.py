@@ -82,7 +82,7 @@ def video_download(video_link, audio):
                 audio_stream.download(os.getcwd() + "/songs")
             else:
                 # download video
-                video_stream = video.stream.filter(file_extension='mp4').first()
+                video_stream = video.streams.filter(file_extension='mp4').first()
                 video_stream.download(os.getcwd() + "/videos")
         except Exception as exception_e:
             print(f"An error occured while downloading {vidLINK}: {exception_e}")
