@@ -91,10 +91,37 @@ def main_menu():
             main_menu()
         return choice
 
-def string_encode(string):
-    """Encodes a string for searching/use in urls"""
-    s = string.encode('utf-8')
-    return s
+def admin_menu():
+    """Used to store the main menu for MFPython v2, to make the code cleaner anc easier to read"""
+    
+    header = "              Welcome, Veillax              "
+    options = [  
+        "Youtube Video Downloader",
+        "Dice Roller"
+    ]
+
+    print("\033c") # clears the terminal
+    progressive_text_output("=" * len(header))
+    progressive_text_output(header)
+    progressive_text_output("=" * len(header))
+    progressive_text_output(choose_random_phrase())
+    progressive_text_output("=" * len(header))
+    progressive_text_output("Please choose an option:")
+    for i, option in enumerate(options):
+        progressive_text_output(f"{i + 1}. {option}")
+    progressive_text_output("=" * len(header))
+    if __name__ == "__main__":
+        print()
+    else:
+        choice = int(input("> "))
+        if choice == 1:
+            pass
+        elif choice == 2:
+            pass
+        else:
+            progressive_text_output("Invalid option. Please try again.")
+            main_menu()
+        return choice
 
 def clear():
     """Just a simple function to let me import and be
@@ -114,3 +141,25 @@ def human_readable_number(number):
 def format_datetime(dt):
     return dt.strftime("%b %d, %Y, %I:%M %p")
     
+def change_warning_value(change=False, new_value=None):
+    with open("options.json", "r", encoding="UTF-8") as f:
+        options = json.load(f)
+    if new_value is not None and change == True:
+        options["warning"] = new_value
+    else:
+        return options['warning']
+
+    with open("options.json", "w", encoding="UTF-8") as f:
+        json.dump(options, f, indent=4)
+
+def admin_change_options(option, new_value=None):
+    with open("options.json", "r", encoding="UTF-8") as f:
+        options = json.load(f)
+    if new_value is not None:
+        options[option] = new_value
+        return f"{option} has been changed to {new_value}"
+    else:
+        return options[option]
+
+    with open("options.json", "w", encoding="UTF-8") as f:
+        json.dump(options, f, indent=4)

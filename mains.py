@@ -8,12 +8,20 @@ import functions
 import yt
 
 
-def main_menu():
-    choice = functions.main_menu()
+def main_menu(admin=False):
+    if not admin:
+        choice = functions.main_menu()
 
-    if choice == 1:
-        yt.main()
-    elif choice == 2:
-        # Dice Roller Code, remove pass if implimented
-        pass
+        if choice == 1:
+            yt.main()
+        elif choice == 2:
+            # Dice Roller Code, remove pass if implimented
+            pass
+    elif admin:
+        choice = functions.admin_menu()
 
+        if choice == 1:
+            yt.main()
+        elif choice == 2:
+            # Dice Roller Code, remove pass if implimented
+            pass
