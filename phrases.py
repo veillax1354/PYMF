@@ -29,6 +29,3 @@ if __name__ == "__main__":
     for hour in range(0, 24):
         part = get_part_of_day(hour)
         print(f"hour {hour} is {part}")
-
-
-
