@@ -85,9 +85,9 @@ def video_download(video_link, audio):
         t12(pl)
         pl = ("Length:", yt.length // 60, "min", yt.length % 60, "sec")
         t12(pl)
-        pl = int("Views:", functions.human_readable_number(yt.views))
+        pl = ("Views:", functions.human_readable_number(yt.views))
         t12(pl)
-        pl = ("Posted on", functions.format_datetime(yt.publish_date))
+        pl = ("Posted on ", functions.format_datetime(yt.publish_date))
         t12(pl)
         pl = ("-" * 80)
         t12(pl)
@@ -95,16 +95,9 @@ def video_download(video_link, audio):
         # Direct download
         yt = YouTube(vidLINK)
         video = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
-        audio = False
         try:
-            if audio:
-                # download audio if audio flag is set to True
-                audio_stream = video.streams.filter(only_audio=True, file_extension='mp3').first()
-                audio_stream.download(os.getcwd() + "/songs")
-            else:
-                # download video
-                video_stream = video.streams.filter(file_extension='mp4').first()
-                video_stream.download(os.getcwd() + "/videos")
+            # download video
+            video.download(os.getcwd() + "/videos")
         except Exception as exception_e:
             print(f"An error occured while downloading {vidLINK}: {exception_e}")
         dlpath = os.getcwd() + "/videos"

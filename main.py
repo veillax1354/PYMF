@@ -71,8 +71,8 @@ if __name__ == "__main__":
     parser.add_argument('--skip', action='store_true', help='Skip to the main menu.')
     parser.add_argument('--login', action='store_true', help='Skip to the login.')
     args = parser.parse_args()
-
-    if not args.skip and not args.login:
+    amnd2 = False
+    if not args.skip and not args.login and amnd2:
         os.system("clear")
         functions.t12("\033[0mConnecting...")
         sleep(1)
@@ -94,7 +94,7 @@ if __name__ == "__main__":
         check = input("Type \"s\" to use secure password input, otherwise, type \"i\".")
         TYPE = 'SECURE' if check == 's' else 'INSECURE' if check == 'i' else 'n'
         login(TYPE)
-    elif args.skip and not args.login:
+    elif args.skip and not args.login or not amnd2:
         mains.main_menu()
     elif args.skip and args.login:
         ask = input("Skip straight to menu, or skip to login? Input either \"menu\" or \"login\"")
