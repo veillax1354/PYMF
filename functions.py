@@ -11,16 +11,16 @@ import json
 import os
 import time
 
-def t12_0(text, base_delay=0.02, ellipsis_delay=0.8):
-    """Progressive text input, dubbed t12_type, or t12_0. Used to progressivley display characters in a string, using longer delays when an elipsis is encountered.
+def t12(inputtext, base_delay=0.02, ellipsis_delay=0.8):
+    """Progressive text input, dubbed t12_type, or t12. Used to progressivley display characters in a string, using longer delays when an elipsis is encountered.
 
     Args:
-        text (str): Input text that is then used to progressivley echo each char individually
+        inputtext (str): Input text that is then used to progressivley echo each char individually using the given delay
         base_delay (float, optional): Base delay, used for normal chars. Measured in Seconds. Defaults to 0.03.
         ellipsis_delay (float, optional): Custom delay, used for elipsis (...). Measured in Seconds. Defaults to 0.8.
     """
-    for char in text:
-        if char == '.' and text[text.index(char):text.index(char)+3] == "...":
+    for char in inputtext:
+        if char == '.' and inputtext[inputtext.index(char):inputtext.index(char)+3] == "...":
             print(".", end='', flush=True)
             time.sleep(ellipsis_delay)
         else:
@@ -30,19 +30,15 @@ def t12_0(text, base_delay=0.02, ellipsis_delay=0.8):
 
 if __name__ == "__main__":
     text = "Connecting... Initiating connection... Connection secured..."
-    t12_0(text)
-
-
-
-
-def progressive_text_output(text, delay=0.03):
-    """
-        Litterally just me being lazy.
-    """
-    t12_0(text)
+    t12(text)
 
 def choose_random_phrase():
-    with open("phrases.json", "r") as f:
+    """Retrieves a random phrase from phrases.json
+
+    Returns:
+        str chosen_phrase: Returns the chosen phrase
+    """
+    with open("phrases.json", "r", encoding="UTF-8") as f:
         phrases = json.load(f)
     
     anytime_phrases = phrases["anytime"]
@@ -56,11 +52,8 @@ if __name__ == "__main__":
     random_phrase = choose_random_phrase()
     print(random_phrase)
 
-
-
-
 def main_menu():
-    """Used to store the main menu for MFPython v2, to make the code cleaner anc easier to read"""
+    """Used to store the main menu for PYMF, to make the code cleaner anc easier to read"""
     
     header = "                 Welcome                "
     options = [
@@ -70,15 +63,15 @@ def main_menu():
     ]
 
     print("\033c") # clears the terminal
-    progressive_text_output("=" * len(header))
-    progressive_text_output(header)
-    progressive_text_output("=" * len(header))
-    progressive_text_output(choose_random_phrase())
-    progressive_text_output("=" * len(header))
-    progressive_text_output("Please choose an option:")
+    t12("=" * len(header))
+    t12(header)
+    t12("=" * len(header))
+    t12(choose_random_phrase())
+    t12("=" * len(header))
+    t12("Please choose an option:")
     for i, option in enumerate(options):
-        progressive_text_output(f"{i + 1}. {option}")
-    progressive_text_output("=" * len(header))
+        t12(f"{i + 1}. {option}")
+    t12("=" * len(header))
     if __name__ == "__main__":
         print()
     else:
@@ -87,30 +80,33 @@ def main_menu():
             pass
         elif choice == 2:
             pass
+        elif choice == 3:
+            pass
         else:
-            progressive_text_output("Invalid option. Please try again.")
+            t12("Invalid option. Please try again.")
             main_menu()
         return choice
 
 def admin_menu():
-    """Used to store the main menu for MFPython v2, to make the code cleaner anc easier to read"""
+    """Used to store the main menu for , to make the code cleaner anc easier to read"""
     
-    header = "              Welcome, Veillax              "
+    header = "                Admin Console                "
     options = [  
         "Youtube Video Downloader",
-        "Dice Roller"
+        "Dice Roller",
+        "Notes"
     ]
 
     print("\033c") # clears the terminal
-    progressive_text_output("=" * len(header))
-    progressive_text_output(header)
-    progressive_text_output("=" * len(header))
-    progressive_text_output(choose_random_phrase())
-    progressive_text_output("=" * len(header))
-    progressive_text_output("Please choose an option:")
+    t12("=" * len(header))
+    t12(header)
+    t12("=" * len(header))
+    t12(choose_random_phrase())
+    t12("=" * len(header))
+    t12("Please choose an option:")
     for i, option in enumerate(options):
-        progressive_text_output(f"{i + 1}. {option}")
-    progressive_text_output("=" * len(header))
+        t12(f"{i + 1}. {option}")
+    t12("=" * len(header))
     if __name__ == "__main__":
         print()
     else:
@@ -119,8 +115,10 @@ def admin_menu():
             pass
         elif choice == 2:
             pass
+        elif choice == 3:
+            pass
         else:
-            progressive_text_output("Invalid option. Please try again.")
+            t12("Invalid option. Please try again.")
             main_menu()
         return choice
 
