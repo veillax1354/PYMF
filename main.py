@@ -14,38 +14,52 @@ def login(type):
     adminsuid = "1217-a12"
     password = "employee002048"
     adminpass = "a071129"
+    quickskipadmin = 'qsa1'
+    quickskip = 'qs01'
     os.system("clear")
+    t12_0("\033[32m==========================================================================================================================================================", 0.01)
+    print("\033[0m")
     t12_0("\033[33mEnter username: ") if type == 'SECURE' else t12_0("\033[32mEnter username: ")
     entered_username = input() if type == 'SECURE' else input()
-    if entered_username == username or adminun:
+    if entered_username == quickskip or quickskipadmin:
+        if entered_username == quickskip:
+            entered_suid = suid
+            entered_password = password
+        elif entered_username == quickskipadmin:
+            entered_suid = adminsuid
+            entered_password = adminpass
+    elif entered_username == username or adminun:
         t12_0("Enter SUID: ") if type == 'SECURE' else t12_0("Enter SUID: ")
         entered_suid = input()
         if entered_suid == suid or adminsuid:
             t12_0("Enter password: ") if type == 'INSECURE'  else t12_0("Enter password: ")
-            entered_password = getpass.getpass("**********") if type == 'SECURE' else input()
+            entered_password = getpass.getpass("__________\033[0m") if type == 'SECURE' else input("\033[0m")
         else:
-            print("\033[1;31m\033[0;31mAccess denied")
+            t12_0("\033[1;31m\033[0;31mAccess denied")
             sleep(1)
             os.system("python3 main.py")
 
     else:
-        print("\033[1;31m\033[0;31mAccess denied")
+        t12_0("\033[1;31m\033[0;31mAccess denied")
         sleep(1)
         os.system("python3 main.py")
+    print("\033[32m")
+    t12_0("==========================================================================================================================================================\033[0m", 0.01)
 
-    if entered_username == username and entered_suid == suid and entered_password == password:
-        print("Authorizing...")
+    if (entered_username == username or quickskip) and entered_suid == suid and entered_password == password:
+        t12_0("Authorizing...")
         sleep(1)
-        print("Authorized! \033[32mAccess granted.")
+        t12_0("Authorized! \033[32mAccess granted.")
         sleep(3)
         mains.main_menu()
-    elif entered_username == adminun and entered_suid == adminsuid and entered_password == adminpass:
+    elif (entered_username == adminun or quickskipadmin) and entered_suid == adminsuid and entered_password == adminpass:
         t12_0("Authorizing...")
         t12_0("Authorized! \033[1;92mAdmin access granted")
         t12_0("Welcome, Veillax.")
+        sleep(3)
         mains.main_menu(True)
     else:    
-        print("\033[1;31m\033[0;31mAccess denied")
+        t12_0("\033[1;31m\033[0;31mAccess denied")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Optional skipping to main eun or login.')
@@ -59,20 +73,29 @@ if __name__ == "__main__":
         sleep(1)
         functions.t12_0("Initiating connection...")
         sleep(1)
-        functions.t12_0("Connection secured...")
+        functions.t12_0("Connection secured!\033[32m")
         sleep(1)
+        t12_0("==========================================================================================================================================================\033[0m", 0.01)
         if functions.change_warning_value(True):
-            functions.t12_0("\033[0;91m\033[1;31mWARNING!\033[0m\033[31m It is highly recommended to avoid entering your password in plain text as it poses a security risk.\n\033[33mYour password may be visible to others and can be intercepted by malicious actors. Use caution when entering sensitive information\n\033[0mType \"s\" to use secure password input, otherwise, type \"i\".")
+            functions.t12_0("\033[0;91m\033[1;31mWARNING!\033[0m\033[31m It is highly recommended to avoid entering your password in plain text as it poses a security risk.\n\033[33mYour password may be visible to others and can be intercepted by malicious actors. Use caution when entering sensitive information\n\033[0m.")
+        t12_0("Type \"s\" to use secure password input, otherwise, type \"i\".")
         check = input("\033[32m>>>\033[0m ")
         TYPE = 'SECURE' if check == 's' else 'INSECURE' if check == 'i' else 'n'
         if TYPE == 'n':
-            print("Please try again.\n\033[0;91m\033[1;31mTerminating Connection...") 
+            t12_0("Please try again.\n\033[0;91m\033[1;31mTerminating Connection...") 
         else:
             login(TYPE)
     elif not args.skip and args.login:
-        login('SECURE')
+        check = input("Type \"s\" to use secure password input, otherwise, type \"i\".")
+        TYPE = 'SECURE' if check == 's' else 'INSECURE' if check == 'i' else 'n'
+        login(TYPE)
     elif args.skip and not args.login:
         mains.main_menu()
     elif args.skip and args.login:
         ask = input("Skip straight to menu, or skip to login? Input either \"menu\" or \"login\"")
-        mains.main_menu() if ask == 'menu' else login('SECURE')
+        if ask == 'menu':
+            mains.main_menu() 
+        else: 
+            check = input("Type \"s\" to use secure password input, otherwise, type \"i\".")
+            TYPE = 'SECURE' if check == 's' else 'INSECURE' if check == 'i' else 'n'
+            login(TYPE)
