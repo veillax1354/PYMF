@@ -65,7 +65,8 @@ def main_menu():
     header = "                 Welcome                "
     options = [
         "Youtube Video Downloader",
-        "Dice Roller"
+        "Dice Roller",
+        "Note Taking"
     ]
 
     print("\033c") # clears the terminal

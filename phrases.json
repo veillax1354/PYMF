@@ -1,17 +1,17 @@
 {
-    "anytime": [
-      "Hello there! It's always great to see you.",
-      "How's your day going so far?",
-      "Hi there! Is there anything I can help you with today?",
-      "Good to see you! How can I assist you?",
-      "Hello! How are you feeling today?"
-    ],
-    "phrases": [
-      "How are you doing today?",
-      "What's new with you?",
-      "What have you been up to lately?",
-      "How's your day going so far?",
-      "What's been on your mind lately?",
-      "How's work/school been treating you?"
-    ]
-  }
+  "anytime": [
+    "Hello there! It's always great to see you.",
+    "How's your day going so far?",
+    "Hi there! Is there anything I can help you with today?",
+    "Good to see you! How can I assist you?",
+    "Hello! How are you feeling today?"
+  ],
+  "phrases": [
+    "How are you doing today?",
+    "What's new with you?",
+    "What have you been up to lately?",
+    "How's your day going so far?",
+    "What's been on your mind lately?",
+    "How's work/school been treating you?"
+  ]
+}
