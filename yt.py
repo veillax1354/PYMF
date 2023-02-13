@@ -125,7 +125,7 @@ def file_download(file_path, audio=False, pathname=None):
             video = pytube.YouTube(url)
             if audio:
                 # download audio if audio flag is set to True
-                audio_stream = video.streams.filter(only_audio=True, file_extension='mp3').first()
+                audio_stream = video.streams.filter(only_audio=True, file_extension='mp3 ').first()
                 audio_stream.download(dlpath)
                 pl = (f"{audio_stream.default_filename} has been downloaded.")
                 t12(pl)
