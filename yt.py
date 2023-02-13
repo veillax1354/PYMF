@@ -13,19 +13,23 @@ import re
 import requests
 import pytube
 from pytube import Playlist, YouTube
+from dotenv import load_dotenv
 import functions
 from functions import t12
 
-API_KEY = os.environ.get("API_KEY")
+load_dotenv("PYMF.env")
+API_KEY = os.getenv("YT_API_KEY")
 
 class ApiNotFoundException(Exception):
     """Custom exception for when the API Key used for the youtube data API v3, usually found in secrets, can't be found"""
-
-try:
-    raise ApiNotFoundException("API_KEY required but not found. Please set up a custom secret with the name 'API_KEY' in Github or manually enter.")
-except ApiNotFoundException as e:
-    pl = str(e)
-    t12(pl)
+if API_KEY is None:
+    try:
+        raise ApiNotFoundException("API_KEY required but not found. Please set up a custom secret with the name 'API_KEY' in Github or manually enter.")
+    except ApiNotFoundException as e:
+        pl = str(e)
+        t12(pl)
+else:
+    pass
 
 # Extracts video links from a playlist and outputs them to "video_links.txt"
 def playlist_video_extract(playlist_link):
@@ -133,17 +137,27 @@ def search_youtube(query):
     """Finds video titles that match the query"""
     url = f'https://www.googleapis.com/youtube/v3/search?part=snippet&q={query}&type=video&key={API_KEY}'
     response = requests.get(url, timeout=10)
-
+    results = json.loads(response.text)
+    try:
+        items = results["items"]
+    except Exception as em:
+        error = results["error"]
+        print(em)
+        print(error)
+        return error
     return json.loads(response.text)
 # Returns search results
 def search():
     """Searches for the query using search_youtube() then downloads the video as either audio or video"""
     query = input("Enter your search query: ")
     results = search_youtube(query)
-    items = results["items"]
+    try:
+        items = results["items"]
+    except Exception as en:
+        print(f"Something went wrong, please try again later; {en}")
 
     for i, result in enumerate(items, start=1):
-        print(f"[{i}] " + result['snippet']['title'] + " - " + result['snippet']['channelTitle'] + " | " + result['id']['videoId'])
+        print(f"[{i}] " + result['snippet']['title'] + " | " + result['snippet']['channelTitle'] + " | " + result['id']['videoId'])
 
 
     choice = int(input("Which video would you like to download (1-5): ")) - 1
