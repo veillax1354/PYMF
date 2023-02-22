@@ -4,12 +4,62 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
 
-# pylint: disable=missing-module-
-import datetime
+# pylint: disable=missing-module-docstring, dangerous-default-value, missing-function-docstring, invalid-name, line-too-long, redefined-outer-name
 import random
 import json
 import os
 import time
+import html
+import termios
+import sys
+import tty
+
+def get_input():
+    fd = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(fd)
+    try:
+        tty.setraw(fd)
+        answer = sys.stdin.read(1)
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+    return answer
+
+def get_key_press(expected_keys=[], should_print=False, print_string=None):
+    """Gets the pressed key from the defined list and returns it
+
+    Args:
+        expected_keys (list, optional): Defined list of keys to check against. Defaults to [].
+        should_print (bool, optional): Decides whether or not to pring which keys should pe pressed. Defaults to False.
+
+    Returns:
+        _type_: _description_
+    """
+    if should_print:
+        if print_string is not None:
+            keys = ""
+            key = expected_keys
+            keys = '"' + ', '.join(key) + '"'
+            t12(f"{print_string} - {keys}: ")
+        elif print_string is None:
+            keys = ""
+            key = expected_keys
+            keys = '"' + ', '.join(key.upper()) + '"'
+            t12(f"Press one of the following keys - {keys}: ")
+    answer = get_input()
+    if expected_keys != []:
+        return answer
+    elif expected_keys == []:
+        return [answer, "Expected Not Specified"]
+    
+    
+
+
+def on_key_press():
+    check = get_key_press(["i", "s", "1"])
+    print(f"Pressed {check}")
+
+def unescape(text):
+    return html.unescape(text)
 
 def t12(inputtext, base_delay=0.02, ellipsis_delay=0.8):
     """Progressive text input, dubbed t12_type, or t12. Used to progressivley display characters in a string, using longer delays when an elipsis is encountered.
@@ -30,7 +80,20 @@ def t12(inputtext, base_delay=0.02, ellipsis_delay=0.8):
 
 if __name__ == "__main__":
     text = "Connecting... Initiating connection... Connection secured..."
-    t12(text)
+    #t12(text)
+    # Sample text with encoded characters
+    text = "This is an example of encoded text: &#39;Hello, World!&#39;"
+
+    # Decode the encoded characters in the text
+    decoded_text = html.unescape(text)
+
+    # Print the original text and the decoded text
+    print("Original text:", text)
+    print("Decoded text:", decoded_text)
+
+    on_key_press()
+
+
 
 def choose_random_phrase():
     """Retrieves a random phrase from phrases.json
@@ -58,11 +121,11 @@ def main_menu():
     header = "                 Welcome                "
     options = [
         "Youtube Video Downloader",
-        "Dice Roller",
+        "Temp Conversion",
         "Note Taking"
     ]
 
-    print("\033c") # clears the terminal
+    os.system("clear") # clears the terminal
     t12("=" * len(header))
     t12(header)
     t12("=" * len(header))
@@ -75,25 +138,25 @@ def main_menu():
     if __name__ == "__main__":
         print()
     else:
-        choice = int(input("> "))
-        if choice == 1:
-            pass
-        elif choice == 2:
-            pass
-        elif choice == 3:
-            pass
+        a = get_key_press(["1", "2", "3"])
+        if a == "1":
+            os.system("clear")
+        elif a == "2":
+            os.system("clear")
+        elif a == "3":
+            os.system("clear")
         else:
             t12("Invalid option. Please try again.")
             main_menu()
-        return choice
+        return a
 
 def admin_menu():
-    """Used to store the main menu for , to make the code cleaner anc easier to read"""
+    """Used to store the main menu for PYMF, to make the code cleaner and easier to read"""
     
     header = "                Admin Console                "
     options = [  
         "Youtube Video Downloader",
-        "Dice Roller",
+        "Temp Conversion",
         "Notes"
     ]
 
@@ -110,17 +173,17 @@ def admin_menu():
     if __name__ == "__main__":
         print()
     else:
-        choice = int(input("> "))
-        if choice == 1:
-            pass
-        elif choice == 2:
-            pass
-        elif choice == 3:
-            pass
+        a = get_key_press(["1", "2", "3"])
+        if a == "1":
+            os.system("clear")
+        elif a == "2":
+            os.system("clear")
+        elif a == "3":
+            os.system("clear")
         else:
             t12("Invalid option. Please try again.")
             main_menu()
-        return choice
+        return a
 
 def clear():
     """Just a simple function to let me import and be

@@ -12,10 +12,12 @@ import json
 import re
 import requests
 import pytube
+import time
+from time import sleep
 from pytube import Playlist, YouTube
 from dotenv import load_dotenv
 import functions
-from functions import t12
+from functions import t12, unescape, get_key_press
 
 load_dotenv("PYMF.env")
 API_KEY = os.getenv("YT_API_KEY")
@@ -68,8 +70,35 @@ def playlist_video_extract(playlist_link):
     else:
         pass
     return title
+
+def display_video_information(yt, description=False, menu_return=False):
+    # Print video information
+    ue_title = unescape(yt.title)
+    ytDefaultMetadata = '"' + ue_title + '"' + " by: " + yt.author
+    pl = ("-" * 80)
+    t12(pl)
+    pl = ("https://www.youtube.com/watch?v=" + yt.video_id)
+    t12(pl)
+    pl = (ytDefaultMetadata)
+    t12(pl)
+    if description:
+        pl = ("Description: \n" + yt.description + "\n")
+        t12(pl)
+    pl = ("Length: ", yt.length // 60, "min", yt.length % 60, "sec")
+    t12(pl)
+    pl = ("Views: ", functions.human_readable_number(yt.views))
+    t12(pl)
+    pl = ("Posted on ", functions.format_datetime(yt.publish_date).strip(", 12:00 AM"))
+    t12(pl)
+    pl = ("-" * 80)
+    t12(pl)
+    if menu_return:
+        t12("Press any key to return to the menu")
+        get_key_press()
+    
+
 # Downloads videos from provided link
-def video_download(video_link, audio):
+def video_download(video_link):
     """Better download function, shows metadata and other stuff"""
     # Use regex to search for the video ID in each string
     match = re.search(r'(?:v=|\/)([0-9A-Za-z_-]{11})', video_link)
@@ -78,24 +107,9 @@ def video_download(video_link, audio):
         vidID = match.group(1)
         vidLINK = 'https://www.youtube.com/watch?v=' + vidID
         yt = YouTube(vidLINK)
-        
-        # Print video information
-        ytDefaultMetadata = '"' + yt.title + '"' + " by: " + yt.author
-        pl = ("\nDownloading:\n" + ("-" * 80))
+        pl = ("\nDownloading:\n")
         t12(pl)
-        pl = (vidLINK)
-        t12(pl)
-        pl = (ytDefaultMetadata)
-        t12(pl)
-        pl = ("Length:", yt.length // 60, "min", yt.length % 60, "sec")
-        t12(pl)
-        pl = ("Views:", functions.human_readable_number(yt.views))
-        t12(pl)
-        pl = ("Posted on ", functions.format_datetime(yt.publish_date))
-        t12(pl)
-        pl = ("-" * 80)
-        t12(pl)
-                
+        display_video_information(yt)
         # Direct download
         yt = YouTube(vidLINK)
         video = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
@@ -110,28 +124,21 @@ def video_download(video_link, audio):
         pl = ('Video was downloaded to ' + str(os.getcwd()) + "/videos")
         t12(pl)
 # Downloads videos from links in "video_links.txt", or other files containing links, links must be seperated by a new line
-def file_download(file_path, audio=False, pathname=None):
+def file_download(file_path, pathname=None):
     """Downloads all video links from a file as long as """
     if pathname is None:
-        dlpath = (os.getcwd() + "/videos" if not audio else os.getcwd() + "/songs")
+        dlpath = (os.getcwd() + "/videos")
     else:
-        dlpath = (os.getcwd() + "/videos/" + pathname if not audio else os.getcwd() + "/songs/" + pathname)
+        dlpath = (os.getcwd() + "/videos/" + pathname)
     with open(file_path, "r", encoding="utf-8") as file:
         for url in file:
             url = url.strip()
             video = pytube.YouTube(url)
-            if audio:
-                # download audio if audio flag is set to True
-                audio_stream = video.streams.filter(only_audio=True, file_extension='mp3 ').first()
-                audio_stream.download(dlpath)
-                pl = (f"{audio_stream.default_filename} has been downloaded.")
-                t12(pl)
-            else:
-                # download video
-                video_stream = video.streams.filter(file_extension='mp4').first()
-                video_stream.download(dlpath)
-                pl = (f"{video_stream.default_filename} has been downloaded.")
-                t12(pl)
+            # download video
+            video_stream = video.streams.filter(file_extension='mp4').first()
+            video_stream.download(dlpath)
+            pl = (f"{video_stream.default_filename} has been downloaded.")
+            t12(pl)
 # Finds video titles that match the query
 def search_youtube(query):
     """Finds video titles that match the query"""
@@ -146,7 +153,7 @@ def search_youtube(query):
         print(error)
         return error
     return json.loads(response.text)
-# Returns search results
+# Returns search results https://www.dataquest.io/blog/python-projects-for-beginners/
 def search():
     """Searches for the query using search_youtube() then downloads the video as either audio or video"""
     query = input("Enter your search query: ")
@@ -157,84 +164,65 @@ def search():
         print(f"Something went wrong, please try again later; {en}")
 
     for i, result in enumerate(items, start=1):
-        print(f"[{i}] " + result['snippet']['title'] + " | " + result['snippet']['channelTitle'] + " | " + result['id']['videoId'])
+        pr = unescape(f"[{i}] " + result['snippet']['title'] + " | " + result['snippet']['channelTitle'] + " | " + result['id']['videoId'])
+        t12(pr)
 
 
     choice = int(input("Which video would you like to download (1-5): ")) - 1
     item = items[choice]
     title = item["snippet"]["title"]
     video_id = item["id"]["videoId"]
-    yt = YouTube(f"https://www.youtube.com/watch?v={video_id}")
-    video = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
-    audio = False
-    check = input("Would you like to download as audio? [y/n]:")
-    audio = True if check.lower() == 'y' else False
-    try:
-        if audio:
-            # download audio if audio flag is set to True
-            audio_stream = video.streams.filter(only_audio=True, file_extension='mp3').first()
-            dlpath = os.getcwd() + "/videos"
-            audio_stream.download(dlpath)
-            print(f"{audio_stream.default_filename} has been downloaded.")
-        else:
-            # download video
-            video_stream = video.streams.filter(file_extension='mp4').first()
-            dlpath = os.getcwd() + "/songs"
-            video_stream.download(dlpath)
-            print(f"{video_stream.default_filename} has been downloaded.")
-    except Exception as exception_e:
-        print(f"An error occured while downloading https://www.youtube.com/watch?v={video_id}: {exception_e}")
-    print(f"{title} has been downloaded!")
+    video_download(f"https://www.youtube.com/watch?v={video_id}, False")
 
 def main():
     """Main function, calling this will start the program"""
+    slep = False
     while True:
+        if slep:
+            sleep(3)
+        os.system("clear")
         # display menu
-        t12("\n" + "-" * 80)
-        t12("\t\tWelcome to the YouTube Video Downloader")
-        t12("\t\t\t\tMenu")
-        t12("-" * 80)
-        t12("1. Download video from YouTube link")
-        t12("2. Download videos from a YouTube Playlist")
-        t12("3. Download videos from file")
-        t12("4. Search for YouTube video")
-        t12("5. Exit")
-        t12("-" * 80)
+        t12("-" * 80, 0.01)
+        t12("\t\tWelcome to the YouTube Video Downloader", 0.01)
+        t12("\t\t\t\tMenu", 0.02)
+        t12("-" * 80, 0.01)
+        t12("1. Download video from YouTube link", 0.025)
+        t12("2. Display the metadata from a YouTube video", 0.025)
+        t12("3. Download videos from a YouTube Playlist", 0.025)
+        t12("4. Download videos from file", 0.025)
+        t12("5. Search for YouTube video", 0.025)
+        t12("6. Exit", 0.01)
+        t12("-" * 80, 0.01)
         # get user input
-        choice = int(input("Enter your choice (1-5): "))
+        choice = int(input("Enter your choice (1-6): "))
         if choice == 1:
             # download video from youtube link
-            url = input("Enter YouTube link: ")
-            audio = False
-            if "--audio" in url:
-                # download audio if --audio flag is present
-                audio = True
-                url = url.replace(" --audio", "")
-            video_download(url, audio)
+            url = input("Enter YouTube Video link: ")
+            video_download(url)
+        elif choice == 2:
+            # displays the video metadata
+            yt = YouTube(input("Enter YouTube Video link: "))
+            display_video_information(yt, True, True)
         elif choice == 3:
+            # downloads videos from a playlist
+            global PLAYLIST_URL
+            PLAYLIST_URL = input("Enter YouTube playlist link: ")
+            file_download("video_links.txt", playlist_video_extract(PLAYLIST_URL))
+        elif choice == 4:
             # download videos from file
             file_name = input("Enter file name: ")
-            audio = False
-            check = input("Would you like to download as audio? [y/n]:")
-            audio = True if check.lower() == 'y' else False
-            file_download(file_name, audio)
-        elif choice == 4:
+            file_download(file_name)
+        elif choice == 5:
             # search for youtube video
             search()
-        elif choice == 2:
-            global PLAYLIST_URL
-            PLAYLIST_URL = input("Enter playlist link: ")
-            audio = False
-            check = input("Would you like to download as audio? [y/n]:")
-            audio = True if check.lower() == 'y' else False
-            file_download("video_links.txt", audio, playlist_video_extract(PLAYLIST_URL))
-        elif choice == 5:
+        elif choice == 6:
             # exit program
             t12("Goodbye!")
             break
         else:
             # invalid choice
             t12("Invalid choice. Try again.")
+        slep = True
 
 if __name__ == "__main__":
     main()

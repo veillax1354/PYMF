@@ -1,5 +1,5 @@
 import csv
-from functions import t12 
+from functions import t12 , get_key_press
 notes = []
 
 def add_note():
@@ -58,7 +58,8 @@ def main_menu():
         t12("3. View a specific note")
         t12("4. Export notes to csv")
         t12("5. Quit")
-        user_choice = input("Enter your choice: ")
+        t12("Enter your choice: ")
+        user_choice = get_key_press(["1", "2", "3", "4", "5"])
         if user_choice == "1":
             add_note()
         elif user_choice == "2":
@@ -69,7 +70,7 @@ def main_menu():
             export_to_csv(notes)
         elif user_choice == "5":
             t12("Would you like to export your notes before you quit [y/n]?")
-            check = input("> ")
+            check = get_key_press(["y", "n"])
             if check == 'y':
                 export_to_csv(notes)
             else:
